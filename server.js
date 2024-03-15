@@ -14,7 +14,7 @@ dotenv.config()
 const app = express()
 
 app.use(cookieParser())
-app.use(cors({origin: "https://chill.onrender.com", credentials: true}));
+app.use(cors({origin: "https://chill-xjjv.onrender.com", credentials: true}));
 app.use(express.json())
 
 const  connect = async()=>{
