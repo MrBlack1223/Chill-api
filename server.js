@@ -4,7 +4,6 @@ import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import cors from 'cors'
 import userRoute from './routes/UserRoute.js'
-import doctorRoute from './routes/DoctorRoute.js'
 import conversationRoute from './routes/ConversationsRoute.js'
 import messageRoute from './routes/MessageRoute.js'
 
@@ -27,7 +26,6 @@ const  connect = async()=>{
 }
 
 app.use('/user',userRoute)
-app.use('/doctor',doctorRoute)
 app.use('/conversation',conversationRoute)
 app.use('/message', messageRoute)
 
