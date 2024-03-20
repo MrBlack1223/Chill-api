@@ -54,16 +54,45 @@ export const handleLogin = async(req,res)=>{
 
         const userWithNoPassword = {...user._doc, password: null, isPassTemporary: user._doc.password.temporary}
 
-        const token = jwt.sign({user: userWithNoPassword}, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+        const token = jwt.sign({user: userWithNoPassword}, process.env.TOKEN_SECRET, { expiresIn: '600s' })
+        const refreshToken = jwt.sign({_id: user._id},process.env.REFRESH_TOKEN, {expiresIn: '180d'})
+
         return res.cookie('jwt',token,{
-            maxAge: 24 * 60 * 60 * 100,
+            maxAge: 60 * 10 * 1000,
             secure: true,
             sameSite: 'none'
-        }).status(200).send(userWithNoPassword)
+        }).status(200).send({user: userWithNoPassword,refreshToken: refreshToken})
     }catch(e){
         return res.send(e)
     }
 }
+export const refreshToken = async(req,res)=>{
+    try{
+        const rToken = req.body.refreshToken
+        let id = ""
+        jwt.verify(rToken,process.env.REFRESH_TOKEN, async (e,decoded)=>{
+            if(e){
+                return res.status(403).send("Wrong token")
+            }
+            id = decoded._id
+        })
+
+        const user = await User.findOne({_id: id})
+        if(!user) return res.sendStatus(401)
+
+        const userWithNoPassword = {...user._doc, password: null, isPassTemporary: user._doc.password.temporary}
+        const token = jwt.sign({user: userWithNoPassword}, process.env.TOKEN_SECRET, { expiresIn: '600s' })
+
+        return res.cookie('jwt',token,{
+            maxAge: 60 * 10 * 1000,
+            secure: true,
+            sameSite: 'none'
+        }).sendStatus(200)
+    }catch(e){
+        console.log(e)
+    }
+}
+
 export const verifyUser = async(req,res)=>{
     try{
         const user = await User.findOne({_id: req.params.id})
@@ -104,7 +133,7 @@ export const passwordReminder = async(req,res) =>{
 export const handleLogout = async(req,res)=>{
     try{
         res.clearCookie('jwt',{
-            maxAge: 24 * 60 * 60 * 100,
+            maxAge: 10 * 60 * 1000,
             secure: true,
             sameSite: 'none',
     }).sendStatus(204)

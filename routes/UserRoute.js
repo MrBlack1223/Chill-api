@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUser, handleUpdateUserPassword, displayAllUsers, handleLogin, handleLogout, passwordReminder, verifyUser, addFriend, removeFriend, findUserByID, findUserByName, sendFriendRequest, declineFriendRequest } from '../controllers/userController.js'
+import { createUser, handleUpdateUserPassword, displayAllUsers, handleLogin, handleLogout, passwordReminder, verifyUser, addFriend, removeFriend, findUserByID, findUserByName, sendFriendRequest, declineFriendRequest, refreshToken } from '../controllers/userController.js'
 import { authJWT } from '../controllers/authJWT.js'
 
 const router = express.Router()
@@ -13,6 +13,7 @@ router.post('/remind', passwordReminder)
 
 router.post('/',createUser)
 router.post('/update/userPassword', authJWT,handleUpdateUserPassword)
+router.post('/refreshToken',refreshToken)
 router.get('/logout',authJWT,handleLogout)
 router.post('/login',handleLogin)
 
