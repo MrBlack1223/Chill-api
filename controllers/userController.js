@@ -58,7 +58,7 @@ export const handleLogin = async(req,res)=>{
         const refreshToken = jwt.sign({_id: user._id},process.env.REFRESH_TOKEN, {expiresIn: '180d'})
 
         return res.cookie('jwt',token,{
-            maxAge: 60 * 10 * 1000,
+            maxAge: 40 * 24 * 60 * 60 * 1000,
             secure: true,
             sameSite: 'none'
         }).status(200).send({user: userWithNoPassword,refreshToken: refreshToken})
@@ -84,7 +84,7 @@ export const refreshToken = async(req,res)=>{
         const token = jwt.sign({user: userWithNoPassword}, process.env.TOKEN_SECRET, { expiresIn: '600s' })
 
         return res.cookie('jwt',token,{
-            maxAge: 60 * 10 * 1000,
+            maxAge: 40 * 24 * 60 * 60 * 1000,
             secure: true,
             sameSite: 'none'
         }).sendStatus(200)
@@ -133,7 +133,7 @@ export const passwordReminder = async(req,res) =>{
 export const handleLogout = async(req,res)=>{
     try{
         res.clearCookie('jwt',{
-            maxAge: 10 * 60 * 1000,
+            maxAge: 40 * 24 * 60 * 60 * 1000,
             secure: true,
             sameSite: 'none',
     }).sendStatus(204)
