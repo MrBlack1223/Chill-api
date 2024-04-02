@@ -31,7 +31,7 @@ export const createUser = async(req,res)=>{
 } 
 export const handleLogin = async(req,res)=>{
     try{
-        const user = await User.findOne({email: req.body.email})
+        const user = await User.findOne({login: req.body.login})
         if(!user) return res.sendStatus(401)
 
         const match = await bcrypt.compare(req.body.password, user.password.text);
